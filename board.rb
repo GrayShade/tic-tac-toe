@@ -15,7 +15,7 @@ class Board
       # Assigning array of given size & default value to each row
       board_hash[row_name] = Array.new(size, ' ')
     end
-    puts board_hash
+    # puts board_hash
   end
 
   def update_board(plyr_move, plyr_icon)
@@ -34,7 +34,7 @@ class Board
     end
   end
 
-  def display_board(calculation_result)
+  def display_board
     board_hash.each do |row_name, arr|
       arr.each_with_index do |ele, idx|
         row_ele = idx == arr.length - 1 ? ele : "#{ele} | "
@@ -46,7 +46,7 @@ class Board
     end
   end
 
-  def win?
-
+  def announce_round_result(calculation_result)
+    puts calculation_result
   end
 end

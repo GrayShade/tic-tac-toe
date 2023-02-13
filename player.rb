@@ -8,7 +8,7 @@ class Player
   end
 
   def input_move
-    puts "#{name} turn:"
+    print "#{name} turn: "
     input = gets.chomp
   end
 end
