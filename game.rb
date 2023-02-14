@@ -11,6 +11,7 @@ class Game
 
   def start_game
     create_playr_objcts
+    assign_name_and_icons
     create_board_objct
     board_obj.create_board
     play_round while any_square_empty?
@@ -22,16 +23,16 @@ class Game
   end
 
   def create_playr_objcts
-    puts 'Name for Player 1:'
-    p1_name = 'p1'
-    puts 'Name for Player 2:'
-    p2_name = 'p2'
-    puts "Choose 'x' or 'o' for Player 1:"
-    p1_icon = 'x'
-    p2_icon = p1_icon == 'x' ? 'o' : 'x'
-    puts "Player 2 assigned '#{p2_icon}' icon"
-    self.p1_obj = Player.new(p1_name, p1_icon)
-    self.p2_obj = Player.new(p2_name, p2_icon)
+    self.p1_obj = Player.new
+    self.p2_obj = Player.new
+  end
+
+  def assign_name_and_icons
+    p1_obj.input_name('Player 1')
+    p2_obj.input_name('Player 2')
+    p1_obj.input_icon
+    p2_obj.icon = p1_obj.icon == 'x' ? 'o' : 'x'
+    puts "#{p2_obj.name} icon is: '#{p2_obj.icon}'"
   end
 
   def create_board_objct
@@ -59,7 +60,7 @@ class Game
   def check_turn_legality; end
 
   def return_winner_or_draw(player_name)
-    win_message = "#{player_name} wins"
+    win_message = "#{player_name} Wins !!!"
     return win_message if check_horizental_win || check_vertical_win || check_diagonal_win
 
     'Match Draw!!!' unless any_square_empty?

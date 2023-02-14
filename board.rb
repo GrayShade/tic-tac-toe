@@ -9,6 +9,7 @@ class Board
 
   def create_board
     puts "Board size is: #{size}x#{size}"
+    puts
     alphas = ('a'..'z').to_a
     size.times do |ele| # creating a hash of given size
       row_name = alphas[ele]
@@ -35,6 +36,7 @@ class Board
   end
 
   def display_board
+    puts 
     board_hash.each do |row_name, arr|
       arr.each_with_index do |ele, idx|
         row_ele = idx == arr.length - 1 ? ele : "#{ele} | "
@@ -43,10 +45,12 @@ class Board
       puts ''
       # don't print line if its last row:
       puts '---------' unless board_hash.keys.last == row_name
+      puts if board_hash.keys.last == row_name
     end
   end
 
   def announce_round_result(calculation_result)
     puts calculation_result
+    puts
   end
 end
