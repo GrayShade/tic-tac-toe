@@ -9,7 +9,11 @@ class Board
 
   def create_board
     puts "Board size is: #{size}x#{size}"
-    puts
+    puts '------------------------------------------------------------'
+    puts '| How To Play:                                             |'
+    puts '| Use alphabets for horizontal rows & numbers for vertical |'
+    puts '| column indicies.i.e, Possible moves are displayed below. |'
+    puts '------------------------------------------------------------'
     alphas = ('a'..'z').to_a
     size.times do |ele| # creating a hash of given size
       row_name = alphas[ele]
@@ -17,9 +21,23 @@ class Board
       board_hash[row_name] = Array.new(size, ' ')
     end
     # puts board_hash
+    display_possible_moves
   end
 
-  def update_board(plyr_move, plyr_icon)
+  def display_possible_moves
+    puts
+    board_hash.each do |row_name, arr|
+      arr.each_with_index do |_, idx|
+        player_icon = idx == arr.length - 1 ? "#{row_name}#{idx}" : "#{row_name}#{idx} | "
+        print player_icon
+      end
+      puts ''
+      # don't print line if its last row:
+      puts '--------------' unless board_hash.keys.last == row_name
+      puts if board_hash.keys.last == row_name
+    end
+  end
+  def update_board(plyr_icon, plyr_move)
     plyr_move = plyr_move.split('')
     board_hash.each do |row_name, arr|
       # if plyr_move == row_name
@@ -28,19 +46,17 @@ class Board
         next unless row_name == plyr_move[0] && idx.to_s == plyr_move[1]
 
         board_hash[row_name][idx] = plyr_icon
-        # cant just use empty_squares_count as it will call getter method &
-        # thus can't assign value to a getter:
         self.empty_squares_count -= 1
       end
     end
   end
 
   def display_board
-    puts 
+    puts
     board_hash.each do |row_name, arr|
       arr.each_with_index do |ele, idx|
-        row_ele = idx == arr.length - 1 ? ele : "#{ele} | "
-        print row_ele
+        player_icon = idx == arr.length - 1 ? ele : "#{ele} | "
+        print player_icon
       end
       puts ''
       # don't print line if its last row:

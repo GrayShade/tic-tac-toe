@@ -3,11 +3,7 @@ require_relative 'board'
 class Game
   attr_accessor :p1_obj, :p2_obj, :board_obj
 
-  def initialize
-    @p1_obj
-    @p2_obj
-    @board_obj
-  end
+  def initialize; end
 
   def start_game
     create_playr_objcts
@@ -28,9 +24,9 @@ class Game
   end
 
   def assign_name_and_icons
-    p1_obj.input_name('Player 1')
-    p2_obj.input_name('Player 2')
-    p1_obj.input_icon
+    p1_obj.input_player_name('Player 1')
+    p2_obj.input_player_name('Player 2', p1_obj.name)
+    p1_obj.input_player_icon
     p2_obj.icon = p1_obj.icon == 'x' ? 'o' : 'x'
     puts "#{p2_obj.name} icon is: '#{p2_obj.icon}'"
   end
@@ -40,24 +36,19 @@ class Game
   end
 
   def play_round
-    make_turn(p1_obj.name, p1_obj.input_move, p1_obj.icon)
-    # # return if there is no empty square left:
-    # return unless any_square_empty?
-
-    make_turn(p2_obj.name, p2_obj.input_move, p2_obj.icon)
+    make_turn(p1_obj.name, p1_obj.icon, p1_obj.input_player_move)
+    make_turn(p2_obj.name, p2_obj.icon, p2_obj.input_player_move)
   end
 
-  def make_turn(player_name, input_move, icon)
-    check_turn_legality
-    board_obj.update_board(input_move, icon)
+  def make_turn(player_name, player_icon, player_move)
+    p1_obj.check_player_move(player_move)
+    board_obj.update_board(player_icon, player_move)
     calculation_result = return_winner_or_draw(player_name)
     # Default arguments if tried to passed to arguments instead of parameters
     # cause assignment. So be careful in that instance.
     board_obj.display_board
     end_game(calculation_result) unless calculation_result.nil?
   end
-
-  def check_turn_legality; end
 
   def return_winner_or_draw(player_name)
     win_message = "#{player_name} Wins !!!"
