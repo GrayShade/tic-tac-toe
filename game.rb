@@ -37,12 +37,12 @@ class Game
 
   def play_round
     player1_obj_name = p1_obj
-    player1_move = p1_obj.input_player_move(board_obj.prefilled_hash, board_obj.board_hash)
+    player1_move = p1_obj.input_player_move(board_obj.prefilled_hash)
     correct_position_move_p1 = enforce_correct_position_move(player1_obj_name, p1_obj.icon, player1_move)
     process_turn(p1_obj.name, p1_obj.icon, correct_position_move_p1)
 
     player2_obj_name = p2_obj
-    player2_move = p2_obj.input_player_move(board_obj.prefilled_hash, board_obj.board_hash)
+    player2_move = p2_obj.input_player_move(board_obj.prefilled_hash)
     correct_position_move_p2 = enforce_correct_position_move(player2_obj_name, p2_obj.icon, player2_move)
     process_turn(p2_obj.name, p2_obj.icon, correct_position_move_p2)
   end
@@ -59,7 +59,7 @@ class Game
 
   def enforce_correct_position_move(player_obj_name, player_icon, player_move)
     while board_obj.position_already_filled?(player_icon, player_move) == false
-      player_move = player_obj_name.input_player_move(board_obj.prefilled_hash, board_obj.board_hash)
+      player_move = player_obj_name.input_player_move(board_obj.prefilled_hash)
     end
     player_move
   end

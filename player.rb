@@ -23,22 +23,28 @@ class Player
     icon
   end
 
-  def input_player_move(prefilled_hash = nil, board_hash)
-    print "#{name} turn: "
-    self.move = gets.chomp
-    check_player_move(move, prefilled_hash, board_hash)
+  def input_player_move(prefilled_hash = nil)
+    checked_move = false
+    while checked_move == false
+      print "#{name} turn: "
+      self.move = gets.chomp
+      checked_move = check_player_move(move, prefilled_hash)
+    end
     move
   end
 
   def check_player_name(name, p1_name)
     if name.empty?
       puts 'Wrong input!!!'
+      puts
       false
     elsif name.length > 20
       puts 'Name too long!!! (20 chars limit)'
+      puts 
       false
     elsif name == p1_name
       puts "Player 1 already is #{p1_name} !!!"
+      puts
       false
     else
       true
@@ -49,21 +55,23 @@ class Player
     return true if %w[x o].include?(icon)
 
     puts 'Wrong Choice!!!'
+    puts
     false
   end
 
-  def check_player_move(move, prefilled_hash, _board_hash)
+  def check_player_move(move, prefilled_hash)
     if move.empty?
       puts 'Wrong input!!!'
+      puts
       false
     elsif move.length != 2
       puts 'Not a valid move !!!'
+      puts
       false
     elsif prefilled_hash.values.none? { |arr| arr.include?(move) }
-      puts 'Not a valid move !!!'
+      puts 'Not a valid move2 !!!'
+      puts
       false
-    # elsif
-
     else
       true
     end
