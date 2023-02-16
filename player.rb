@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Player class to input player moves basically
 class Player
   attr_accessor :name, :icon, :move
 
@@ -6,44 +9,24 @@ class Player
   def input_player_name(player_type, p1_name = nil)
     checked_input = false
     while checked_input == false
-      print "Name for #{player_type}: "
+      print "Name For #{player_type}: "
       self.name = gets.chomp
       checked_input = check_player_name(name, p1_name)
     end
     name
   end
 
-  def input_player_icon
-    checked_icon = false
-    while checked_icon == false
-      print "Choose 'x' or 'o' for #{name}: "
-      self.icon = gets.chomp.downcase
-      checked_icon = check_player_icon(icon)
-    end
-    icon
-  end
-
-  def input_player_move(prefilled_hash = nil)
-    checked_move = false
-    while checked_move == false
-      print "#{name} turn: "
-      self.move = gets.chomp
-      checked_move = check_player_move(move, prefilled_hash)
-    end
-    move
-  end
-
-  def check_player_name(name, p1_name)
+  private def check_player_name(name, p1_name)
     if name.empty?
-      puts 'Wrong input!!!'
+      puts 'Empty Input!!!'
       puts
       false
     elsif name.length > 20
-      puts 'Name too long!!! (20 chars limit)'
-      puts 
+      puts 'Name Too Long !!! (20 chars limit)'
+      puts
       false
     elsif name == p1_name
-      puts "Player 1 already is #{p1_name} !!!"
+      puts "Player 1 Already Is #{p1_name} !!!"
       puts
       false
     else
@@ -51,7 +34,17 @@ class Player
     end
   end
 
-  def check_player_icon(icon)
+  def input_player_icon
+    checked_icon = false
+    while checked_icon == false
+      print "Choose 'x' Or 'o' For #{name}: "
+      self.icon = gets.chomp.downcase
+      checked_icon = check_player_icon(icon)
+    end
+    icon
+  end
+
+  private def check_player_icon(icon)
     return true if %w[x o].include?(icon)
 
     puts 'Wrong Choice!!!'
@@ -59,17 +52,27 @@ class Player
     false
   end
 
-  def check_player_move(move, prefilled_hash)
+  def input_player_move(prefilled_hash = nil)
+    checked_move = false
+    while checked_move == false
+      print "#{name} Turn: "
+      self.move = gets.chomp
+      checked_move = check_player_move(move, prefilled_hash)
+    end
+    move
+  end
+
+  private def check_player_move(move, prefilled_hash)
     if move.empty?
-      puts 'Wrong input!!!'
+      puts 'Empty Input !!!'
       puts
       false
     elsif move.length != 2
-      puts 'Not a valid move !!!'
+      puts 'Invalid Move !!!'
       puts
       false
     elsif prefilled_hash.values.none? { |arr| arr.include?(move) }
-      puts 'Not a valid move2 !!!'
+      puts 'Invalid Move !!!'
       puts
       false
     else
@@ -77,5 +80,7 @@ class Player
     end
   end
 
-  private :check_player_name, :check_player_icon, :check_player_move
+  # Not using below style for access modifier private due to its lack
+  #   of readability:
+  # private :check_player_name, :check_player_icon, :check_player_move
 end

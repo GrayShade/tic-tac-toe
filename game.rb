@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 require_relative 'player'
 require_relative 'board'
+# Game class. This is also main class for project
 class Game
   attr_accessor :p1_obj, :p2_obj, :board_obj
 
@@ -13,29 +16,32 @@ class Game
     play_round while any_square_empty?
   end
 
-  def any_square_empty?
+  # private <== Not using this style of private access modifier for the sake
+  #   of readability. Instead using inline version for instance methods.
+
+  private def any_square_empty?
     # If any square left with default value ' ' representing an empty square:
     board_obj.board_hash.values.any? { |ele| ele.include?(' ') }
   end
 
-  def create_playr_objcts
+  private def create_playr_objcts
     self.p1_obj = Player.new
     self.p2_obj = Player.new
   end
 
-  def assign_name_and_icons
+  private def assign_name_and_icons
     p1_obj.input_player_name('Player 1')
     p2_obj.input_player_name('Player 2', p1_obj.name)
     p1_obj.input_player_icon
     p2_obj.icon = p1_obj.icon == 'x' ? 'o' : 'x'
-    puts "#{p2_obj.name} icon is: '#{p2_obj.icon}'"
+    puts "#{p2_obj.name} Icon Is: '#{p2_obj.icon}'"
   end
 
   def create_board_objct
     self.board_obj = Board.new(3)
   end
 
-  def play_round
+  private def play_round
     player1_obj_name = p1_obj
     player1_move = p1_obj.input_player_move(board_obj.prefilled_hash)
     correct_position_move_p1 = enforce_correct_position_move(player1_obj_name, p1_obj.icon, player1_move)
@@ -47,8 +53,7 @@ class Game
     process_turn(p2_obj.name, p2_obj.icon, correct_position_move_p2)
   end
 
-  def process_turn(player_name, player_icon, player_move)
-
+  private def process_turn(player_name, player_icon, player_move)
     board_obj.update_board(player_icon, player_move)
     calculation_result = return_winner_or_draw(player_name)
     # Default arguments if tried to passed to arguments instead of parameters
@@ -57,27 +62,27 @@ class Game
     end_game(calculation_result) unless calculation_result.nil?
   end
 
-  def enforce_correct_position_move(player_obj_name, player_icon, player_move)
+  private def enforce_correct_position_move(player_obj_name, player_icon, player_move)
     while board_obj.position_already_filled?(player_icon, player_move) == false
       player_move = player_obj_name.input_player_move(board_obj.prefilled_hash)
     end
     player_move
   end
 
-  def return_winner_or_draw(player_name)
+  private def return_winner_or_draw(player_name)
     win_message = "#{player_name} Wins !!!"
     return win_message if check_horizental_win || check_vertical_win || check_diagonal_win
 
     'Match Draw!!!' unless any_square_empty?
   end
 
-  def check_horizental_win
+  private def check_horizental_win
     board_obj.board_hash.values.any? do |array|
       array.count('x') == array.length || array.count('o') == array.length
     end
   end
 
-  def check_vertical_win
+  private def check_vertical_win
     numeric_hash = convert_to_numeric_hash
 
     # initial value against each icon is 0. This will be incremented on each
@@ -96,19 +101,17 @@ class Game
     iconic_hash.values.any? { |val| val == board_obj.size }
   end
 
-  def check_diagonal_win
+  private def check_diagonal_win
     num_hash = convert_to_numeric_hash
     bord_size = board_obj.size
     chek_left_diagnl_win(num_hash, bord_size) || chek_right_diagnl_win(num_hash, bord_size)
   end
 
-  def chek_left_diagnl_win(numeric_hash, board_size)
+  private def chek_left_diagnl_win(numeric_hash, board_size)
     left_diag_hash = {}
-    # board_size = board_obj.size
     # Assigning array of given size & default value to each key of hash:
     left_diag_hash['x'] = Array.new(board_size, ' ')
     left_diag_hash['o'] = Array.new(board_size, ' ')
-    # left_diag_hash['o'] = Array.new(board_obj.size, ' ')
     numeric_hash.each do |key, array|
       array.each_with_index do |icon, idx|
         # if diagonal row index & column index are same(idx == key), then its a
@@ -123,7 +126,7 @@ class Game
     end
   end
 
-  def chek_right_diagnl_win(numeric_hash, board_size)
+  private def chek_right_diagnl_win(numeric_hash, board_size)
     right_diag_hash = {}
     # Assigning array of given size & default value to each key of hash:
     right_diag_hash['x'] = Array.new(board_size, ' ')
@@ -141,7 +144,7 @@ class Game
     end
   end
 
-  def convert_to_numeric_hash
+  private def convert_to_numeric_hash
     numeric_hash = {}
     board_obj.board_hash.values.each_with_index do |ele, idx|
       numeric_hash[idx] = ele
@@ -149,7 +152,7 @@ class Game
     numeric_hash
   end
 
-  def end_game(calculation_result)
+  private def end_game(calculation_result)
     board_obj.announce_round_result(calculation_result)
     exit
   end

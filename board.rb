@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Board class manipulates board
 class Board
   attr_accessor :size, :board_hash, :check_board, :empty_squares_count, :prefilled_hash
 
@@ -8,7 +11,7 @@ class Board
   end
 
   def create_boards
-    puts "Board size is: #{size}x#{size}"
+    puts "Board Size Is: #{size}x#{size}"
     puts '------------------------------------------------------------'
     puts '| How To Play:                                             |'
     puts '| Use alphabets for horizontal rows & numbers for vertical |'
@@ -24,7 +27,7 @@ class Board
     display_possible_moves
   end
 
-  def prefill_hash
+  private def prefill_hash
     # After all tries, prefilled_hash was still referencing to the same
     #   object. So Had to use deep_copy custom method below to cater that issue
     self.prefilled_hash = deep_copy(board_hash)
@@ -36,12 +39,12 @@ class Board
     # prefilled_hash
   end
 
-  def deep_copy(obj)
+  private def deep_copy(obj)
     # Below line is used to make a deep copy of passed object:
     Marshal.load(Marshal.dump(obj))
   end
 
-  def display_possible_moves
+  private def display_possible_moves
     prefilled_hash.each do |row_name, arr|
       arr.each_with_index do |icon, idx|
         player_icon = idx == arr.length - 1 ? icon : "#{icon} | "
@@ -63,7 +66,7 @@ class Board
 
         next if board_hash[row_name][idx] == ' '
 
-        puts 'Position already filled !!!'
+        puts 'Position Already Filled !!!'
         puts
         return false
       end
@@ -74,7 +77,6 @@ class Board
   def update_board(plyr_icon, plyr_move)
     plyr_move = plyr_move.split('')
     board_hash.each do |row_name, arr|
-      # if plyr_move == row_name
       arr.each_with_index do |_ele, idx|
         # check position for player icon to be placed correctly:
         next unless row_name == plyr_move[0] && idx.to_s == plyr_move[1]
