@@ -1,5 +1,5 @@
 class Board
-  attr_accessor :size, :board_hash, :check_board, :empty_squares_count
+  attr_accessor :size, :board_hash, :check_board, :empty_squares_count, :prefilled_hash
 
   def initialize(size)
     self.board_hash = Hash.new(' ')
@@ -7,7 +7,7 @@ class Board
     self.empty_squares_count = (size * size)
   end
 
-  def create_board
+  def create_boards
     puts "Board size is: #{size}x#{size}"
     puts '------------------------------------------------------------'
     puts '| How To Play:                                             |'
@@ -20,15 +20,31 @@ class Board
       # Assigning array of given size & default value to each row
       board_hash[row_name] = Array.new(size, ' ')
     end
-    # puts board_hash
+    prefill_hash
     display_possible_moves
   end
 
-  def display_possible_moves
-    puts
-    board_hash.each do |row_name, arr|
+  def prefill_hash
+    # After all tries, prefilled_hash was still referencing to the same
+    #   object. So Had to use deep_copy custom method below to cater that issue
+    self.prefilled_hash = deep_copy(board_hash)
+    prefilled_hash.each do |row_name, arr|
       arr.each_with_index do |_, idx|
-        player_icon = idx == arr.length - 1 ? "#{row_name}#{idx}" : "#{row_name}#{idx} | "
+        prefilled_hash[row_name][idx] = "#{row_name}#{idx}"
+      end
+    end
+    # prefilled_hash
+  end
+
+  def deep_copy(obj)
+    # Below line is used to make a deep copy of passed object:
+    Marshal.load(Marshal.dump(obj))
+  end
+
+  def display_possible_moves
+    prefilled_hash.each do |row_name, arr|
+      arr.each_with_index do |icon, idx|
+        player_icon = idx == arr.length - 1 ? icon : "#{icon} | "
         print player_icon
       end
       puts ''
@@ -37,6 +53,24 @@ class Board
       puts if board_hash.keys.last == row_name
     end
   end
+
+  def position_already_filled?(_plyr_icon, plyr_move)
+    plyr_move = plyr_move.split('')
+    board_hash.each do |row_name, arr|
+      arr.each_with_index do |_ele, idx|
+        # check position for player icon to be checked:
+        next unless row_name == plyr_move[0] && idx.to_s == plyr_move[1]
+
+        next if board_hash[row_name][idx] == ' '
+
+        puts 'Position already filled !!!'
+        puts
+        return false
+      end
+    end
+    true
+  end
+
   def update_board(plyr_icon, plyr_move)
     plyr_move = plyr_move.split('')
     board_hash.each do |row_name, arr|

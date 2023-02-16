@@ -9,7 +9,6 @@ class Player
       print "Name for #{player_type}: "
       self.name = gets.chomp
       checked_input = check_player_name(name, p1_name)
-      # puts checked_input
     end
     name
   end
@@ -24,10 +23,10 @@ class Player
     icon
   end
 
-  def input_player_move
+  def input_player_move(prefilled_hash = nil, board_hash)
     print "#{name} turn: "
     self.move = gets.chomp
-    check_player_move(move)
+    check_player_move(move, prefilled_hash, board_hash)
     move
   end
 
@@ -47,15 +46,28 @@ class Player
   end
 
   def check_player_icon(icon)
-    return true if icon == 'x' || icon == 'o'
+    return true if %w[x o].include?(icon)
 
     puts 'Wrong Choice!!!'
     false
   end
 
-  def check_player_move(move)
+  def check_player_move(move, prefilled_hash, _board_hash)
+    if move.empty?
+      puts 'Wrong input!!!'
+      false
+    elsif move.length != 2
+      puts 'Not a valid move !!!'
+      false
+    elsif prefilled_hash.values.none? { |arr| arr.include?(move) }
+      puts 'Not a valid move !!!'
+      false
+    # elsif
+
+    else
+      true
+    end
   end
 
-  private :check_player_name, :check_player_icon
-  # puts check_player_move()
+  private :check_player_name, :check_player_icon, :check_player_move
 end

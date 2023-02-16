@@ -9,7 +9,7 @@ class Game
     create_playr_objcts
     assign_name_and_icons
     create_board_objct
-    board_obj.create_board
+    board_obj.create_boards
     play_round while any_square_empty?
   end
 
@@ -36,18 +36,32 @@ class Game
   end
 
   def play_round
-    make_turn(p1_obj.name, p1_obj.icon, p1_obj.input_player_move)
-    make_turn(p2_obj.name, p2_obj.icon, p2_obj.input_player_move)
+    player1_obj_name = p1_obj
+    player1_move = p1_obj.input_player_move(board_obj.prefilled_hash, board_obj.board_hash)
+    correct_position_move_p1 = enforce_correct_position_move(player1_obj_name, p1_obj.icon, player1_move)
+    process_turn(p1_obj.name, p1_obj.icon, correct_position_move_p1)
+
+    player2_obj_name = p2_obj
+    player2_move = p2_obj.input_player_move(board_obj.prefilled_hash, board_obj.board_hash)
+    correct_position_move_p2 = enforce_correct_position_move(player2_obj_name, p2_obj.icon, player2_move)
+    process_turn(p2_obj.name, p2_obj.icon, correct_position_move_p2)
   end
 
-  def make_turn(player_name, player_icon, player_move)
-    p1_obj.check_player_move(player_move)
+  def process_turn(player_name, player_icon, player_move)
+
     board_obj.update_board(player_icon, player_move)
     calculation_result = return_winner_or_draw(player_name)
     # Default arguments if tried to passed to arguments instead of parameters
-    # cause assignment. So be careful in that instance.
+    #   cause assignment. So be careful in that regard.
     board_obj.display_board
     end_game(calculation_result) unless calculation_result.nil?
+  end
+
+  def enforce_correct_position_move(player_obj_name, player_icon, player_move)
+    while board_obj.position_already_filled?(player_icon, player_move) == false
+      player_move = player_obj_name.input_player_move(board_obj.prefilled_hash, board_obj.board_hash)
+    end
+    player_move
   end
 
   def return_winner_or_draw(player_name)
@@ -73,8 +87,8 @@ class Game
     numeric_hash.each do |_, array|
       array.each_with_index do |icon, idx|
         # if ele is not empty, then store it in i.e,
-        # {"x0"=>3, "o1"=>2, "x2"=>1, "o2"=>1} format. Thats because all
-        #  vertical elements will have same index in an array:
+        #   {"x0"=>3, "o1"=>2, "x2"=>1, "o2"=>1} format. Thats because all
+        #   vertical elements will have same index in an array:
         iconic_hash["#{icon}#{idx}"] = iconic_hash["#{icon}#{idx}"] + 1 if icon != ' '
       end
     end
